@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.extflightdelays.ExtFlightDelaysController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.extflightdelays.ExtFlightDelaysController">
 	<bottom>
 		<TextArea fx:id="txtResult" prefHeight="222.0" prefWidth="600.0" BorderPane.alignment="CENTER">
 			<BorderPane.margin>
@@ -68,7 +68,7 @@
 				<HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="74.0" prefHeight="100.0" prefWidth="200.0">
 					<children>
 						<Text strokeType="OUTSIDE" strokeWidth="0.0" text="Miglia disponibili" wrappingWidth="144.83544921875" />
-						<TextField fx:id="numeroVoliTxtInput" prefHeight="27.0" prefWidth="150.0">
+						<TextField fx:id="migliaDispTxtInput" prefHeight="27.0" prefWidth="150.0">
 							<HBox.margin>
 								<Insets left="10.0" />
 							</HBox.margin>

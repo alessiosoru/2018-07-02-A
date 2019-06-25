@@ -7,9 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import it.polito.tdp.extflightdelays.model.Airline;
 import it.polito.tdp.extflightdelays.model.Airport;
+import it.polito.tdp.extflightdelays.model.Collegamento;
 import it.polito.tdp.extflightdelays.model.Flight;
 
 public class ExtFlightDelaysDAO {
@@ -37,8 +39,8 @@ public class ExtFlightDelaysDAO {
 		}
 	}
 
-	public List<Airport> loadAllAirports() {
-		String sql = "SELECT * FROM airports";
+	public List<Airport> loadAllAirports(Map<Integer, Airport> airportsIdMap) {
+		String sql = "SELECT * FROM airports ";
 		List<Airport> result = new ArrayList<Airport>();
 
 		try {
@@ -51,6 +53,7 @@ public class ExtFlightDelaysDAO {
 						rs.getString("CITY"), rs.getString("STATE"), rs.getString("COUNTRY"), rs.getDouble("LATITUDE"),
 						rs.getDouble("LONGITUDE"), rs.getDouble("TIMEZONE_OFFSET"));
 				result.add(airport);
+				airportsIdMap.put(airport.getId(), airport);
 			}
 
 			conn.close();
@@ -80,6 +83,36 @@ public class ExtFlightDelaysDAO {
 						rs.getDouble("ELAPSED_TIME"), rs.getInt("DISTANCE"),
 						rs.getTimestamp("ARRIVAL_DATE").toLocalDateTime(), rs.getDouble("ARRIVAL_DELAY"));
 				result.add(flight);
+			}
+
+			conn.close();
+			return result;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+	}
+
+	public List<Collegamento> getCollegamentiDistMin(Map<Integer, Airport> airportsIdMap, Integer distanzaMinima) {
+		String sql = "SELECT flights.ORIGIN_AIRPORT_ID AS id1, " + 
+				"	flights.DESTINATION_AIRPORT_ID AS id2, AVG(DISTANCE) AS avg " + 
+				"FROM flights " + 
+				"GROUP BY id1, id2 " + 
+				"HAVING avg> ? ";
+		List<Collegamento> result = new LinkedList<Collegamento>();
+
+		try {
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, distanzaMinima);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				Collegamento c = new Collegamento(airportsIdMap.get(rs.getInt("id1")),
+						airportsIdMap.get(rs.getInt("id2")), rs.getDouble("avg"));
+				result.add(c);
 			}
 
 			conn.close();
